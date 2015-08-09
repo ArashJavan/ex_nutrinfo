@@ -5,8 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import static example.de.nutrinfo.util.LogUtils.makeLogTag;
+
 
 public class BaseActivity extends AppCompatActivity {
+
+    private final static String TAG = makeLogTag(BaseActivity.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
