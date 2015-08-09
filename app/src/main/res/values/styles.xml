@@ -1,0 +1,32 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="Nutrinfo" parent="Theme.Nutrinfo.Base">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="Theme.Nutrinfo.Base" parent="Theme.AppCompat.Light">
+
+        <item name="android:windowActionBar">false</item>
+
+        <!-- Support library compatibility -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+
+
+        <item name="colorPrimary">@color/theme_primary</item>
+        <item name="colorPrimaryDark">@color/theme_primary_dark_2</item>
+        <item name="colorAccent">@color/theme_accent_3</item>
+    </style>
+
+    <style name="HeaderBar" parent="">
+        <item name="android:background">?colorPrimary</item>
+        <item name="android:elevation">@dimen/headerbar_elevation</item>
+    </style>
+
+    <style name="ActionBarThemeOverlay" parent="">
+        <item name="android:textColorPrimary">#fff</item>
+    </style>
+
+    <style name="ActionBarPopupThemeOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>

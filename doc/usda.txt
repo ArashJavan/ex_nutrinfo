@@ -1,0 +1,5 @@
+API-Key: zy87Ma6qLIp6dgJtNN12SsZHWWn6Mtx0rgjBc0GT
+Account Email: a.javan.gh@gmail.com
+Account ID: e5778599-c449-4115-afd6-227a1038acea
+example: https://api.data.gov/nrel/alt-fuel-stations/v1/nearest.json?api_key=zy87Ma6qLIp6dgJtNN12SsZHWWn6Mtx0rgjBc0GT&location=Denver+CO
+http://ndb.nal.usda.gov/ndb/api/doc
