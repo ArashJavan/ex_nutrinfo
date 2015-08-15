@@ -3,3 +3,35 @@ Account Email: a.javan.gh@gmail.com
 Account ID: e5778599-c449-4115-afd6-227a1038acea
 example: https://api.data.gov/nrel/alt-fuel-stations/v1/nearest.json?api_key=zy87Ma6qLIp6dgJtNN12SsZHWWn6Mtx0rgjBc0GT&location=Denver+CO
 http://ndb.nal.usda.gov/ndb/api/doc
+
+Examples:
+
+########## API-FOOD-REPORT ##########
+
+Here's a couple of ways you can obtain the chedder cheese (NDBno 01009 ) full report in JSON format.
+Browser: http://api.nal.usda.gov/ndb/reports/?ndbno=11987&type=b&format=fjson&api_key=DEMO_KEY
+CURL: curl -H "Content-Type:application/json" -d '{"ndbno":"01009","type":"f"}' DEMO_KEY@api.nal.usda.gov/ndb/reports
+
+##### API-LIST ######
+
+Browser: http://api.nal.usda.gov/ndb/list?format=json&lt=f&sort=n&api_key=DEMO_KEY
+CURL: curl -H "Content-Type:application/json" -d '{"lt":"f","sort":"n"}' DEMO_KEY@api.nal.usda.gov/ndb/list
+
+########## API-NUTRIENT-REPORT ##########
+
+All foods:
+Browser: http://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=DEMO_KEY&nutrients=205&nutrients=204&nutrients=208&nutrients=269
+CURL: curl -H "Content-Type:application/json" -d '{"nutrients":["204","205","208","269"],"max":25,"offset":0}' DEMO_KEY@api.nal.usda.gov/ndb/nutrients
+
+For food groups Dairy and Egg Products (id = 0100) and Poultry Products (id=0500):
+Browser: http://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=DEMO_KEY&nutrients=205&nutrients=204&nutrients=208&nutrients=269&fg=0100&fg=0500
+CURL: curl -H "Content-Type:application/json" -d '{"nutrients":["204","205","208","269"],"fg":["0100","0500"],"max":25,"offset":0}' DEMO_KEY@api.nal.usda.gov/ndb/nutrients
+
+For chedder cheese (ndbno 01009) only:
+Browser: http://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=DEMO_KEY&nutrients=205&nutrients=204&nutrients=208&nutrients=269&ndbno=01009
+CURL: curl -H "Content-Type:application/json" -d '{"nutrients":["204","205","208","269"],"ndbno":"01009","max":25,"offset":0}' DEMO_KEY@api.nal.usda.gov/ndb/nutrients
+
+########## API-SEARCH ##########
+
+Browser: http://api.nal.usda.gov/ndb/search/?format=json&q=butter&sort=n&max=25&offset=0&api_key=DEMO_KEY
+Curl: curl -H "Content-Type: application/json" -d '{"q":"butter","max":"25","offset":"0"}' DEMO_KEY@api.nal.usda.gov/ndb/search
