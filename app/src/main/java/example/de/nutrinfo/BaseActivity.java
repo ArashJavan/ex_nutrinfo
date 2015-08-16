@@ -1,9 +1,16 @@
 package example.de.nutrinfo;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import org.json.JSONException;
+
+import java.io.IOException;
+
+import example.de.nutrinfo.net.NutrinfoFetcher;
 
 import static example.de.nutrinfo.util.LogUtils.makeLogTag;
 
@@ -16,6 +23,7 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+        new FetchItemsTask().execute();
     }
 
     @Override
@@ -33,10 +41,26 @@ public class BaseActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_search) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class FetchItemsTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                new NutrinfoFetcher().getList(NutrinfoFetcher.ListTypes.FOOD,
+                        50, 0, NutrinfoFetcher.SortOrder.NAME);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 }

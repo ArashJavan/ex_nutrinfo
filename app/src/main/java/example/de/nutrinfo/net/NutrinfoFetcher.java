@@ -1,15 +1,31 @@
 package example.de.nutrinfo.net;
 
 import android.net.Uri;
+import android.util.Log;
 
-import java.net.URI;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+
+import example.de.nutrinfo.Model.Food;
 
 /**
  * Created by milux on 15.08.15.
  */
 public class NutrinfoFetcher {
 
+    private static final String TAG = NutrinfoFetcher.class.getSimpleName();
+
     private final String API_KEY = "zy87Ma6qLIp6dgJtNN12SsZHWWn6Mtx0rgjBc0GT";
+    private final String API_FORMAT = "json";
+
 
     /**
      * enum for different request parameters
@@ -20,7 +36,8 @@ public class NutrinfoFetcher {
         MAX_ITEMS("max"),
         LIST_TYPES("lt"),
         OFFSET("offset"),
-        SORT("sort");
+        SORT("sort"),
+        FORMAT("format");
 
         private String mAlias;
 
@@ -72,19 +89,48 @@ public class NutrinfoFetcher {
         }
     }
 
-    public void fetchItems(String url) {
+    private JSONObject makeRequest(String urlSpec) throws IOException, JSONException {
+        URL url = new URL(urlSpec);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
+        try {
+            ByteArrayOutputStream out = new ByteArrayOutputStream();
+            InputStream in = connection.getInputStream();
 
+            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                return null;
+            }
+
+            int bytesRead = 0;
+            byte[] buffer = new byte[1024];
+            while ((bytesRead = in.read(buffer)) > 0) {
+                out.write(buffer, 0, bytesRead);
+            }
+
+            out.close();
+            return new JSONObject(out.toString());
+        } finally {
+            connection.disconnect();
+        }
     }
 
-    public void getList(ListTypes type, int maxItems, int offset, SortOrder so) {
+    public ArrayList<Food> downloadItems(String url) throws IOException, JSONException {
+        JSONObject j = makeRequest(url);
+
+        Log.i(TAG, j.toString());
+        return new ArrayList<Food>();
+    }
+
+    public ArrayList<Food> getList(ListTypes type, int maxItems, int offset, SortOrder so) throws IOException, JSONException {
         String url = Uri.parse(Endpoints.LISTS.getUrl()).buildUpon()
                 .appendQueryParameter(RequestParams.API_KEY.getAlias(), API_KEY)
                 .appendQueryParameter(RequestParams.MAX_ITEMS.getAlias(), String.valueOf(maxItems))
                 .appendQueryParameter(RequestParams.LIST_TYPES.getAlias(), type.getAlias())
                 .appendQueryParameter(RequestParams.SORT.getAlias(), so.getAlias())
+                .appendQueryParameter(RequestParams.OFFSET.getAlias(), String.valueOf(offset))
+                .appendQueryParameter(RequestParams.FORMAT.getAlias(), API_FORMAT)
                 .toString();
 
-        fetchItems(url);
+        return downloadItems(url);
     }
 }
