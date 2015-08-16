@@ -1,4 +1,4 @@
-package example.de.nutrinfo.Model;
+package example.de.nutrinfo.model;
 
 /**
  * Class representing a food-desc.

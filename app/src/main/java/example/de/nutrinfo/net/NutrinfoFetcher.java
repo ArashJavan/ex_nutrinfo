@@ -10,18 +10,18 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import example.de.nutrinfo.Model.Food;
+import example.de.nutrinfo.model.Food;
+import example.de.nutrinfo.util.LogUtils;
 
 /**
  * Created by milux on 15.08.15.
  */
 public class NutrinfoFetcher {
 
-    private static final String TAG = NutrinfoFetcher.class.getSimpleName();
+    private static final String TAG = LogUtils.makeLogTag(NutrinfoFetcher.class);
 
     private final String API_KEY = "zy87Ma6qLIp6dgJtNN12SsZHWWn6Mtx0rgjBc0GT";
     private final String API_FORMAT = "json";
@@ -117,7 +117,7 @@ public class NutrinfoFetcher {
     public ArrayList<Food> downloadItems(String url) throws IOException, JSONException {
         JSONObject j = makeRequest(url);
 
-        Log.i(TAG, j.toString());
+        LogUtils.i(TAG, j.toString());
         return new ArrayList<Food>();
     }
 
