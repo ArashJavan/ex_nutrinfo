@@ -1,4 +1,4 @@
-package example.de.nutrinfo;
+package example.de.nutrinfo.ui;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,6 +10,7 @@ import org.json.JSONException;
 
 import java.io.IOException;
 
+import example.de.nutrinfo.R;
 import example.de.nutrinfo.net.NutrinfoFetcher;
 
 import static example.de.nutrinfo.util.LogUtils.makeLogTag;
