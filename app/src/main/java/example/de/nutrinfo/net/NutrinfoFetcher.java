@@ -115,14 +115,12 @@ public class NutrinfoFetcher {
         }
     }
 
-    public ArrayList<Food> downloadItems(String url) throws IOException, JSONException {
-        JSONObject j = makeRequest(url);
+    public JSONObject downloadItems(String url) throws IOException, JSONException {
+        LogUtils.d(TAG, "downloadItems" + url);
+        return makeRequest(url);
+}
 
-        LogUtils.i(TAG, j.toString());
-        return new ArrayList<Food>();
-    }
-
-    public ArrayList<Food> getList(ListTypes type, int maxItems, int offset, SortOrder so) throws IOException, JSONException {
+    public JSONObject getList(ListTypes type, int maxItems, int offset, SortOrder so) throws IOException, JSONException {
         String url = Uri.parse(Endpoints.LISTS.getUrl()).buildUpon()
                 .appendQueryParameter(RequestParams.API_KEY.getAlias(), API_KEY)
                 .appendQueryParameter(RequestParams.MAX_ITEMS.getAlias(), String.valueOf(maxItems))

@@ -2,6 +2,8 @@ package example.de.nutrinfo.ui;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,7 +26,15 @@ public class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
-        new FetchItemsTask().execute();
+
+        FragmentManager fm = getSupportFragmentManager();
+        FoodListFragment fragment = (FoodListFragment) fm.findFragmentById(R.id.container);
+
+        if (fragment == null) {
+            fragment = new FoodListFragment();
+            fm.beginTransaction().add(R.id.container, fragment)
+                    .addToBackStack(fragment.TAG).commit();
+        }
     }
 
     @Override
@@ -47,21 +57,5 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private class FetchItemsTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                new NutrinfoFetcher().getList(NutrinfoFetcher.ListTypes.FOOD,
-                        50, 0, NutrinfoFetcher.SortOrder.NAME);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
     }
 }
