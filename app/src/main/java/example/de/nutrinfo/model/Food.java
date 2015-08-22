@@ -24,43 +24,43 @@ public class Food {
         mManufacName = manufacName;
     }
 
-    private int getNdbNo() {
+    public int getNdbNo() {
         return mNdbNo;
     }
 
-    private void setNdbNo(int ndbNo) {
+    public void setNdbNo(int ndbNo) {
         mNdbNo = ndbNo;
     }
 
-    private String getName() {
+    public String getName() {
         return mName;
     }
 
-    private void setName(String name) {
+    public void setName(String name) {
         mName = name;
     }
 
-    private String getFdGrp() {
+    public String getFdGrp() {
         return mFdGrp;
     }
 
-    private void setFdGrp(String fdGrp) {
+    public void setFdGrp(String fdGrp) {
         mFdGrp = fdGrp;
     }
 
-    private String getComName() {
+    public String getComName() {
         return mComName;
     }
 
-    private void setComName(String comName) {
+    public void setComName(String comName) {
         mComName = comName;
     }
 
-    private String getManufacName() {
+    public String getManufacName() {
         return mManufacName;
     }
 
-    private void setManufacName(String manufacName) {
+    public void setManufacName(String manufacName) {
         mManufacName = manufacName;
     }
 
