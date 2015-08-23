@@ -1,11 +1,14 @@
 package example.de.nutrinfo.ui;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,10 +44,11 @@ public class FoodListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_foodlist, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_foodlist);
-        mRecyclerView.setLayoutManager(
-                new GridLayoutManager(getActivity(),
-                        GridLayoutManager.DEFAULT_SPAN_COUNT,
-                        GridLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),
+                LinearLayoutManager.VERTICAL,
+                false));
+
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         NutrinfoListAdpater adapter =
                 new NutrinfoListAdpater(getActivity(), mFoods, R.layout.fooditem);
@@ -55,7 +59,10 @@ public class FoodListFragment extends Fragment {
     }
 
 
-    private class FetchItemsTask extends AsyncTask<Void, Void, Void> {
+    /**
+     * Async-Worker for fetching the food-items.
+     */
+    private class FetchItemsTask extends AsyncTask<Void, Void, ArrayList<Food>> {
         NutrinfoListAdpater mAdapter;
 
         public FetchItemsTask(NutrinfoListAdpater adapter) {
@@ -63,7 +70,7 @@ public class FoodListFragment extends Fragment {
         }
 
         @Override
-        protected Void doInBackground(Void...params) {
+        protected ArrayList<Food> doInBackground(Void...params) {
             int start, end, total;
             start = end = total = 0;
 
@@ -107,8 +114,7 @@ public class FoodListFragment extends Fragment {
                     foods.add(food);
                 }
 
-                mAdapter.addItems(mFoods);
-
+                return foods;
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -116,8 +122,16 @@ public class FoodListFragment extends Fragment {
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(ArrayList<Food> result) {
+            mAdapter.addItems(result);
+        }
     }
 
+    /**
+     * Custom adapter class for listing food items insde a recyclerview
+     */
     private class NutrinfoListAdpater extends RecyclerView.Adapter<NutrinfoListAdpater.ViewHolder> {
 
         ArrayList<Food> mFoods;
@@ -139,9 +153,12 @@ public class FoodListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            String name = mFoods.get(position).getName();
-            holder.mName.setText(name);
-            holder.mLabel.setText(name.charAt(0));
+            try {
+                String name = mFoods.get(position).getName();
+                holder.mName.setText(name);
+            } catch (Resources.NotFoundException ex) {
+                ex.printStackTrace();
+            }
         }
 
         @Override
@@ -151,6 +168,7 @@ public class FoodListFragment extends Fragment {
 
         public void addItem(Food item) {
             mFoods.add(item);
+
             notifyDataSetChanged();
         }
 
@@ -160,13 +178,10 @@ public class FoodListFragment extends Fragment {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            TextView mLabel;
             TextView mName;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-
-                mLabel = (TextView) itemView.findViewById(R.id.food_letter);
                 mName = (TextView) itemView.findViewById(R.id.food_name);
             }
         }
