@@ -77,8 +77,8 @@ public class FoodListFragment extends Fragment {
             ArrayList<Food> foods = mFoods;
 
             try {
-                JSONObject jsonItems = new NutrinfoFetcher().getList(NutrinfoFetcher.ListTypes.FOOD,
-                        50, 0, NutrinfoFetcher.SortOrder.NAME);
+                JSONObject jsonItems = new NutrinfoFetcher().getList(NutrinfoFetcher.ListTypes.FOOD_GROUP,
+                        50, 0, NutrinfoFetcher.SortOrder.ID);
 
                 JSONObject jsonList = jsonItems.getJSONObject("list");
 
