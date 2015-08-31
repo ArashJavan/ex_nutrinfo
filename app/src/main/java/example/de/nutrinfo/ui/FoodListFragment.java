@@ -4,16 +4,17 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.common.collect.ImmutableMap;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,11 +23,14 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import example.de.nutrinfo.R;
 import example.de.nutrinfo.model.Food;
 import example.de.nutrinfo.net.NutrinfoFetcher;
 import example.de.nutrinfo.util.LogUtils;
+import example.de.nutrinfo.util.CategoryEntry;
+import example.de.nutrinfo.views.SimpleDividerItemDecoration;
 
 /**
  * Created by milux on 19.08.15.
@@ -38,21 +42,77 @@ public class FoodListFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private ArrayList<Food> mFoods = new ArrayList<>();
 
+    private ArrayList<Map.Entry<String, Integer>> mCatList = new ArrayList<>();
+
+    private ArrayList<CategoryEntry> mFoodCategory = new CategoryEntry.Builder()
+            .put("Dairy & Egg", R.drawable.ic_eggs)
+            .put("Spices & Herbs", R.drawable.ic_vegan)
+            .put("Baby Foods", R.drawable.ic_cooking_pot)
+            .put("Fats & Oils", R.drawable.ic_wine_bottle)
+            .put("Poultry", R.drawable.ic_chicken)
+            .put("Soups, Sauces & Gravies", R.drawable.ic_soup)
+            .put("Sausages & Luncheon Meats", R.drawable.ic_hotdog)
+            .put("Breakfast Cereals", R.drawable.ic_bread)
+            .put("Fruits & Fruit Juices", R.drawable.ic_fruit_juice)
+            .put("Pork Products", R.drawable.ic_pig)
+            .put("Vegetables", R.drawable.ic_sesame)
+            .put("Nut & Seed Product", R.drawable.ic_nut)
+            .put("Beef Products", R.drawable.ic_steak)
+            .put("Beverages", R.drawable.ic_water)
+            .put("Finfish & Shellfish", R.drawable.ic_fish)
+            .put("Legumes & Legume", R.drawable.ic_corn)
+            .put("Lamb", R.drawable.ic_lamb)
+            .put("Baked Prod.", R.drawable.ic_cinnamon)
+            .put("Sweets", R.drawable.ic_ice_cream)
+            .put("Pasta", R.drawable.ic_spaghetti)
+            .put("Fast Foods", R.drawable.ic_hamburger)
+            .put("Meals & Entrees", R.drawable.ic_sushi)
+            .put("Snacks", R.drawable.ic_wrap)
+            .put("Restaurant Foods", R.drawable.ic_restaurant)
+            .build();
+
+    private Map<String, Integer> mFoodCategory1 =
+            new ImmutableMap.Builder<String, Integer>()
+                    .put("Dairy & Egg", R.drawable.ic_eggs)
+                    .put("Spices & Herbs", R.drawable.ic_vegan)
+                    .put("Baby Foods", R.drawable.ic_cooking_pot)
+                    .put("Fats & Oils", R.drawable.ic_wine_bottle)
+                    .put("Poultry", R.drawable.ic_chicken)
+                    .put("Soups, Sauces & Gravies", R.drawable.ic_soup)
+                    .put("Sausages & Luncheon Meats", R.drawable.ic_hotdog)
+                    .put("Breakfast Cereals", R.drawable.ic_bread)
+                    .put("Fruits & Fruit Juices", R.drawable.ic_fruit_juice)
+                    .put("Pork Products", R.drawable.ic_pig)
+                    .put("Vegetables", R.drawable.ic_sesame)
+                    .put("Nut & Seed Product", R.drawable.ic_nut)
+                    .put("Beef Products", R.drawable.ic_steak)
+                    .put("Beverages", R.drawable.ic_water)
+                    .put("Finfish & Shellfish", R.drawable.ic_fish)
+                    .put("Legumes & Legume", R.drawable.ic_corn)
+                    .put("Lamb", R.drawable.ic_lamb)
+                    .put("Baked Prod.", R.drawable.ic_cinnamon)
+                    .put("Sweets", R.drawable.ic_ice_cream)
+                    .put("Pasta", R.drawable.ic_spaghetti)
+                    .put("Fast Foods", R.drawable.ic_hamburger)
+                    .put("Meals & Entrees", R.drawable.ic_sushi)
+                    .put("Snacks", R.drawable.ic_wrap)
+                    .put("Restaurant Foods", R.drawable.ic_restaurant)
+                    .build();
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_foodlist, container, false);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_foodlist);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),
-                LinearLayoutManager.VERTICAL,
-                false));
-
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        NutrinfoListAdpater adapter =
-                new NutrinfoListAdpater(getActivity(), mFoods, R.layout.fooditem);
+        CategoryAdapter adapter =
+                new CategoryAdapter(getActivity(), mFoodCategory, R.layout.category_items);
 
+
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         mRecyclerView.setAdapter(adapter);
         new FetchItemsTask(adapter).execute();
         return view;
@@ -63,9 +123,9 @@ public class FoodListFragment extends Fragment {
      * Async-Worker for fetching the food-items.
      */
     private class FetchItemsTask extends AsyncTask<Void, Void, ArrayList<Food>> {
-        NutrinfoListAdpater mAdapter;
+        CategoryAdapter mAdapter;
 
-        public FetchItemsTask(NutrinfoListAdpater adapter) {
+        public FetchItemsTask(CategoryAdapter adapter) {
             mAdapter = adapter;
         }
 
@@ -132,14 +192,14 @@ public class FoodListFragment extends Fragment {
     /**
      * Custom adapter class for listing food items insde a recyclerview
      */
-    private class NutrinfoListAdpater extends RecyclerView.Adapter<NutrinfoListAdpater.ViewHolder> {
+    private class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
 
-        ArrayList<Food> mFoods;
+        List<CategoryEntry> mCategories;
         Context mContext;
         int mLayoutId;
 
-        public NutrinfoListAdpater(Context context, ArrayList<Food> foods, int layoutId) {
-            mFoods = foods;
+        public CategoryAdapter(Context context, ArrayList<CategoryEntry> categories, int layoutId) {
+            mCategories = categories;
             mContext = context;
             mLayoutId = layoutId;
         }
@@ -154,8 +214,12 @@ public class FoodListFragment extends Fragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             try {
-                String name = mFoods.get(position).getName();
-                holder.mName.setText(name);
+
+                String categoryName = mCategories.get(position).getCategory();
+                int id = mCategories.get(position).getId();
+
+                holder.mCategory.setText(categoryName);
+                holder.mImageView.setImageResource(id);
             } catch (Resources.NotFoundException ex) {
                 ex.printStackTrace();
             }
@@ -163,26 +227,26 @@ public class FoodListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return mFoods.size();
+            return mCategories.size();
         }
 
-        public void addItem(Food item) {
-            mFoods.add(item);
-
+        public void addItem(CategoryEntry entry) {
+            mCategories.add(entry);
             notifyDataSetChanged();
         }
 
         public void addItems(List<Food> items) {
-            mFoods.addAll(items);
             notifyDataSetChanged();
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            TextView mName;
+            ImageView mImageView;
+            TextView mCategory;
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                mName = (TextView) itemView.findViewById(R.id.food_name);
+                mImageView = (ImageView) itemView.findViewById(R.id.card_view_circle_img);
+                mCategory = (TextView) itemView.findViewById(R.id.category_name);
             }
         }
     }

@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -10,14 +11,27 @@
     app:cardElevation="@dimen/card_view_elevation"
     app:cardCornerRadius="@dimen/card_view_rad">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/card_view_circle_img"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent">
 
-    </RelativeLayout>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/card_view_circle_img"
+                android:layout_width="@dimen/cat_item_image_size"
+                android:background="@color/theme_accent_4"
+                android:layout_height="@dimen/cat_item_image_size"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"/>
+
+            <TextView
+                android:id="@+id/category_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="@string/cat_food_default_text"
+                android:layout_below="@+id/card_view_circle_img"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"/>
+        </RelativeLayout>
+
 </android.support.v7.widget.CardView>

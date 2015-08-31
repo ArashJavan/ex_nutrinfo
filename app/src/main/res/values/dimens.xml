@@ -5,4 +5,5 @@
     <dimen name="headerbar_elevation">6dp</dimen>
     <dimen name="card_view_elevation">6dp</dimen>
     <dimen name="card_view_rad">1dp</dimen>
+    <dimen name="cat_item_image_size">30dp</dimen>
 </resources>
