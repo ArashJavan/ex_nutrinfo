@@ -14,8 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.common.collect.ImmutableMap;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,13 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import example.de.nutrinfo.R;
 import example.de.nutrinfo.model.Food;
 import example.de.nutrinfo.net.NutrinfoFetcher;
 import example.de.nutrinfo.util.LogUtils;
 import example.de.nutrinfo.util.CategoryEntry;
-import example.de.nutrinfo.views.SimpleDividerItemDecoration;
 
 /**
  * Created by milux on 19.08.15.
@@ -217,7 +213,7 @@ public class FoodListFragment extends Fragment {
 
             public ViewHolder(View itemView) {
                 super(itemView);
-                mImageView = (ImageView) itemView.findViewById(R.id.card_view_circle_img);
+                mImageView = (ImageView) itemView.findViewById(R.id.card_view_img);
                 mCategory = (TextView) itemView.findViewById(R.id.category_name);
             }
         }

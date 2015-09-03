@@ -5,5 +5,8 @@
     <string name="action_settings">Settings</string>
     <string name="action_search">search</string>
     <string name="food">food</string>
+
+    <!-- Cardview -Items -->
     <string name="cat_food_default_text">food category</string>
+    <string name="number_of_foods_default">123</string>
 </resources>

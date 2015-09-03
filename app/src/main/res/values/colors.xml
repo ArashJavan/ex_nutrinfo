@@ -11,4 +11,5 @@
     <color name="theme_accent_4">#64dd17</color>
 
     <color name="card_view_bg">#e0e0e0</color>
+    <color name="count_foods_bg">#f8bbd0</color>
 </resources>
