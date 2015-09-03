@@ -207,14 +207,19 @@ public class FoodListFragment extends Fragment {
             notifyDataSetChanged();
         }
 
+        /**
+         * Viewholder class for Recyclerview Adapter
+         */
         public class ViewHolder extends RecyclerView.ViewHolder {
             ImageView mImageView;
             TextView mCategory;
+            TextView mFoodCounts;
 
             public ViewHolder(View itemView) {
                 super(itemView);
                 mImageView = (ImageView) itemView.findViewById(R.id.card_view_img);
                 mCategory = (TextView) itemView.findViewById(R.id.category_name);
+                mFoodCounts = (TextView) itemView.findViewById(R.id.count_foods);
             }
         }
     }
