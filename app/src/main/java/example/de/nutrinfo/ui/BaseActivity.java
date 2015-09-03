@@ -1,16 +1,19 @@
 package example.de.nutrinfo.ui;
 
+import android.app.ActionBar;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import org.json.JSONException;
 
 import java.io.IOException;
+import java.util.TooManyListenersException;
 
 import example.de.nutrinfo.R;
 import example.de.nutrinfo.net.NutrinfoFetcher;
@@ -21,11 +24,15 @@ import static example.de.nutrinfo.util.LogUtils.makeLogTag;
 public class BaseActivity extends AppCompatActivity {
 
     private final static String TAG = makeLogTag(BaseActivity.class);
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_actionbar);
+        setSupportActionBar(toolbar);
 
         FragmentManager fm = getSupportFragmentManager();
         FoodListFragment fragment = (FoodListFragment) fm.findFragmentById(R.id.container);

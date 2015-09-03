@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import example.de.nutrinfo.R;
 import example.de.nutrinfo.model.Food;
 import example.de.nutrinfo.net.NutrinfoFetcher;
@@ -45,6 +46,7 @@ public class FoodListFragment extends Fragment {
     private ArrayList<Map.Entry<String, Integer>> mCatList = new ArrayList<>();
 
     private ArrayList<CategoryEntry> mFoodCategory = new CategoryEntry.Builder()
+            .put("All", R.drawable.ic_all)
             .put("Dairy & Egg", R.drawable.ic_eggs)
             .put("Spices & Herbs", R.drawable.ic_vegan)
             .put("Baby Foods", R.drawable.ic_cooking_pot)
@@ -71,34 +73,6 @@ public class FoodListFragment extends Fragment {
             .put("Restaurant Foods", R.drawable.ic_restaurant)
             .build();
 
-    private Map<String, Integer> mFoodCategory1 =
-            new ImmutableMap.Builder<String, Integer>()
-                    .put("Dairy & Egg", R.drawable.ic_eggs)
-                    .put("Spices & Herbs", R.drawable.ic_vegan)
-                    .put("Baby Foods", R.drawable.ic_cooking_pot)
-                    .put("Fats & Oils", R.drawable.ic_wine_bottle)
-                    .put("Poultry", R.drawable.ic_chicken)
-                    .put("Soups, Sauces & Gravies", R.drawable.ic_soup)
-                    .put("Sausages & Luncheon Meats", R.drawable.ic_hotdog)
-                    .put("Breakfast Cereals", R.drawable.ic_bread)
-                    .put("Fruits & Fruit Juices", R.drawable.ic_fruit_juice)
-                    .put("Pork Products", R.drawable.ic_pig)
-                    .put("Vegetables", R.drawable.ic_sesame)
-                    .put("Nut & Seed Product", R.drawable.ic_nut)
-                    .put("Beef Products", R.drawable.ic_steak)
-                    .put("Beverages", R.drawable.ic_water)
-                    .put("Finfish & Shellfish", R.drawable.ic_fish)
-                    .put("Legumes & Legume", R.drawable.ic_corn)
-                    .put("Lamb", R.drawable.ic_lamb)
-                    .put("Baked Prod.", R.drawable.ic_cinnamon)
-                    .put("Sweets", R.drawable.ic_ice_cream)
-                    .put("Pasta", R.drawable.ic_spaghetti)
-                    .put("Fast Foods", R.drawable.ic_hamburger)
-                    .put("Meals & Entrees", R.drawable.ic_sushi)
-                    .put("Snacks", R.drawable.ic_wrap)
-                    .put("Restaurant Foods", R.drawable.ic_restaurant)
-                    .build();
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,10 +85,8 @@ public class FoodListFragment extends Fragment {
         CategoryAdapter adapter =
                 new CategoryAdapter(getActivity(), mFoodCategory, R.layout.category_items);
 
-
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         mRecyclerView.setAdapter(adapter);
-        new FetchItemsTask(adapter).execute();
+        //new FetchItemsTask(adapter).execute();
         return view;
     }
 

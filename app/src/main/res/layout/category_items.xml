@@ -7,21 +7,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="4dp"
     app:cardBackgroundColor="@color/card_view_bg"
     app:cardElevation="@dimen/card_view_elevation"
     app:cardCornerRadius="@dimen/card_view_rad">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <ImageView
                 android:id="@+id/card_view_circle_img"
                 android:layout_width="@dimen/cat_item_image_size"
-                android:background="@color/theme_accent_4"
                 android:layout_height="@dimen/cat_item_image_size"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="6dp"/>
 
             <TextView
                 android:id="@+id/category_name"
