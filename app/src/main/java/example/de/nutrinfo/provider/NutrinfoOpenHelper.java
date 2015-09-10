@@ -20,15 +20,16 @@ public class NutrinfoOpenHelper extends SQLiteOpenHelper {
 
     private static final String TAG = LogUtils.makeLogTag(NutrinfoOpenHelper.class);
 
+    // Current version of database
     private static final int CUR_DATABASE_VERSION = 1;
 
-    private static final String PACKAGE_NAME = "example.de.nutrinfo";
+    // Databse related infos
+    private static String PACKAGE_NAME;
+    private static String DB_PATH;
+    private static String mDbName = "usda.sql3";
 
-    private static String DB_NAME = "usda.sql3";
-    private static String DB_PATH = "/data/data/" + PACKAGE_NAME + "/databases/";
-
-    private NutrinfoOpenHelper mHelper = null;
-    private Context mContext;
+    private SQLiteDatabase mDataBase;
+    private final Context mContext;
 
     interface Tables {
         String COMMON_NUTRIENT = "common_nutrient";
@@ -38,9 +39,14 @@ public class NutrinfoOpenHelper extends SQLiteOpenHelper {
         String NUTRITION = "nutrition";
     }
 
-    public NutrinfoOpenHelper(Context context) {
-        super(context, DB_NAME, null, CUR_DATABASE_VERSION);
+    public NutrinfoOpenHelper(Context context, String dbname) {
+        super(context, dbname, null, CUR_DATABASE_VERSION);
         mContext = context;
+        mDbName = dbname;
+        PACKAGE_NAME = context.getPackageName();
+
+        // get the full path to the data base
+        DB_PATH = String.format("//data//data//%s//databases//", PACKAGE_NAME);
     }
 
     @Override
@@ -54,6 +60,39 @@ public class NutrinfoOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public synchronized void close() {
+        if (mDataBase != null) {
+            mDataBase.close();
+        }
+        super.close();
+    }
+
+
+    public SQLiteDatabase openDatabase() {
+        String path = DB_PATH + mDbName;
+        if (mDataBase == null) {
+            createDataBase();
+            mDataBase = SQLiteDatabase.openDatabase(path, null,
+                    SQLiteDatabase.OPEN_READWRITE);
+        }
+        return mDataBase;
+    }
+
+    /**
+     * open and create the database if it does not already exists
+     */
+    public void createDataBase() {
+        boolean dbExist = checkDataBase();
+        if (!dbExist) {
+            this.getReadableDatabase();
+
+            try {
+                copyDataBase();
+            } catch (IOException ex) {
+                LogUtils.e(TAG, "Error Copying databse: " + ex.getMessage());
+            }
+        } else {
+            LogUtils.i(TAG, "Database already exists.");
+        }
     }
 
     /**
@@ -64,34 +103,39 @@ public class NutrinfoOpenHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = null;
 
         try {
-            return mContext.getDatabasePath(DB_NAME).exists();
+            return mContext.getDatabasePath(mDbName).exists();
         } catch (SQLiteException ex) {
             LogUtils.d(TAG, ex.getMessage());
             return false;
         }
     }
 
-    private void copyDataBase() {
+    /**
+     * Copy the database located in the assets to application folder "/data/data/...."
+     * @throws IOException
+     */
+    private void copyDataBase() throws IOException{
 
         AssetManager asset = mContext.getAssets();
 
-        try {
-            // local db as inputstream
-            InputStream in = asset.open(DB_NAME);
+        // local db as inputstream,
+        //The stream source is located in the asset
+        InputStream in = asset.open(mDbName);
 
-            // path to db
-            final String outName = DB_PATH + DB_NAME;
+        // path to db
+        String outName = DB_PATH + mDbName;
 
-            // open the empty db as outputstream
-            OutputStream out = new FileOutputStream(outName);
+        // open the empty db as outputstream
+        OutputStream out = new FileOutputStream(outName);
 
-            byte[] buffer = new byte[1024];
-            int length = 0;
-            while ((length = in.read(buffer)) > 0) {
-                out.write(buffer);
-            }
-        } catch (IOException ex) {
-            LogUtils.e(TAG, "Error Copying database " + ex.getMessage());
+        byte[] buffer = new byte[1024];
+        int length = 0;
+        while ((length = in.read(buffer)) > 0) {
+            out.write(buffer);
         }
+
+        out.flush();
+        out.close();
+        in.close();
     }
 }

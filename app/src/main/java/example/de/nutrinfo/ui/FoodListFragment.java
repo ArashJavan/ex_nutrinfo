@@ -2,6 +2,8 @@ package example.de.nutrinfo.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -26,6 +28,7 @@ import java.util.Map;
 import example.de.nutrinfo.R;
 import example.de.nutrinfo.model.Food;
 import example.de.nutrinfo.net.NutrinfoFetcher;
+import example.de.nutrinfo.provider.NutrinfoOpenHelper;
 import example.de.nutrinfo.util.LogUtils;
 import example.de.nutrinfo.util.CategoryEntry;
 
@@ -35,6 +38,8 @@ import example.de.nutrinfo.util.CategoryEntry;
 public class FoodListFragment extends Fragment {
 
     public static final String TAG = LogUtils.makeLogTag(FoodListFragment.class);
+
+    private static final String DB_NAME = "usda.sql";
 
     private RecyclerView mRecyclerView;
     private ArrayList<Food> mFoods = new ArrayList<>();
@@ -82,6 +87,22 @@ public class FoodListFragment extends Fragment {
                 new CategoryAdapter(getActivity(), mFoodCategory, R.layout.category_items);
 
         mRecyclerView.setAdapter(adapter);
+
+        NutrinfoOpenHelper nutrinfoOpenHelper = new NutrinfoOpenHelper(getActivity(), DB_NAME);
+        SQLiteDatabase sqLiteDatabase = nutrinfoOpenHelper.openDatabase();
+
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+
+
+        ArrayList<String> cats = new ArrayList<>();
+        cursor.moveToFirst();
+        if (!cursor.isAfterLast()) {
+            int i = cursor.getCount();
+            for (int x = 0; x < i; x++) {
+                cats.add(cursor.getString(x));
+            }
+        }
+
         //new FetchItemsTask(adapter).execute();
         return view;
     }
